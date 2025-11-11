@@ -877,6 +877,33 @@ def logout():
     return redirect(url_for('index'))
 
 # Admin routes
+@app.route('/admin/register', methods=['GET', 'POST'])
+def admin_register():
+    if User.query.filter_by(role='admin').first():
+        flash('An admin account already exists.')
+        return redirect(url_for('admin_login'))
+
+    if request.method == 'POST':
+        fullname = request.form['fullname']
+        email = request.form['email']
+        password = request.form['password']
+        password_hash = generate_password_hash(password)
+
+        new_admin = User(
+            fullname=fullname,
+            email=email,
+            password_hash=password_hash,
+            role='admin',
+            status='approved'
+        )
+        db.session.add(new_admin)
+        db.session.commit()
+        flash('Admin registration successful. Please login.')
+        return redirect(url_for('admin_login'))
+
+    return render_template('admin_register.html')
+
+
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
