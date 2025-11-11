@@ -1,0 +1,740 @@
+{% extends "_layout.html" %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block header %}
+    Teacher Dashboard
+{% endblock %}
+
+{% block nav %}
+<style>
+    /* Navigation Styles */
+    nav {
+        background: var(--secondary-indigo);
+        padding: 0.8rem 0;
+    }
+
+    nav ul {
+        display: flex;
+        list-style: none;
+        justify-content: center;
+        gap: 2rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav a {
+        color: var(--white);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    nav a:hover {
+        background: var(--hover-blue);
+        color: var(--white);
+        transform: translateY(-2px);
+    }
+
+    nav a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--accent-gold);
+        transition: var(--transition);
+        transform: translateX(-50%);
+    }
+
+    nav a:hover::after {
+        width: 80%;
+    }
+
+    /* Responsive Navigation */
+    @media (max-width: 768px) {
+        nav ul {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        nav ul {
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        nav a {
+            display: block;
+            width: 200px;
+            text-align: center;
+        }
+    }
+</style>
+
+<nav>
+    <ul>
+        <li><a href="{{ url_for('teacher_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('create_exam') }}">New Exam</a></li>
+        <li><a href="{{ url_for('profile') }}">Profile</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Teacher Dashboard Specific Styles */
+    :root {
+        --primary-blue: #2C3E50;
+        --accent-gold: #F1C40F;
+        --hover-blue: #2980B9;
+        --secondary-indigo: #5D6D7E;
+        --charcoal: #34495E;
+        --white: #FFFFFF;
+        --light-grey: #F4F6F8;
+        --medium-grey: #E5E9EC;
+        --dark-grey: #7F8C8D;
+        --shadow: rgba(44, 62, 80, 0.15);
+        --success: #27AE60;
+        --error: #E74C3C;
+        --warning: #F39C12;
+        --transition: all 0.3s ease;
+    }
+
+    h2 {
+        color: var(--charcoal);
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid var(--accent-gold);
+        display: inline-block;
+    }
+
+    /* Dashboard Layout */
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+        .dashboard-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px var(--shadow);
+        margin-bottom: 2rem;
+    }
+
+    .quick-actions h3 {
+        color: var(--primary-blue);
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        background: var(--primary-blue);
+        color: var(--white);
+        border: none;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .action-btn:hover {
+        background: var(--hover-blue);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(41, 128, 185, 0.3);
+    }
+
+    .action-btn-primary {
+        background: var(--success);
+    }
+
+    .action-btn-primary:hover {
+        background: #219653;
+        box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+    }
+
+    /* Dashboard Stats */
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px var(--shadow);
+        text-align: center;
+        border-top: 4px solid var(--accent-gold);
+        transition: var(--transition);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px var(--shadow);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        color: var(--dark-grey);
+        font-weight: 600;
+    }
+
+    /* Table Styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--white);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px var(--shadow);
+        margin-bottom: 2rem;
+    }
+
+    thead {
+        background: var(--primary-blue);
+        color: var(--white);
+    }
+
+    th {
+        padding: 1.2rem 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    tbody tr {
+        transition: var(--transition);
+        border-bottom: 1px solid var(--medium-grey);
+    }
+
+    tbody tr:hover {
+        background: var(--light-grey);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    td {
+        padding: 1.2rem 1rem;
+        color: var(--charcoal);
+        font-weight: 500;
+    }
+
+    /* Action Buttons */
+    .actions {
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+    }
+
+    .actions a {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        display: inline-block;
+        text-align: center;
+        min-width: 80px;
+    }
+
+    .actions a:nth-child(1) {
+        background: var(--warning);
+        color: var(--white);
+    }
+
+    .actions a:nth-child(1):hover {
+        background: #E67E22;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+    }
+
+    .actions a:nth-child(2) {
+        background: var(--hover-blue);
+        color: var(--white);
+    }
+
+    .actions a:nth-child(2):hover {
+        background: #2471A3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(41, 128, 185, 0.3);
+    }
+
+    .actions a:nth-child(3) {
+        background:  var(--success);
+        color: var(--white);
+    }
+
+    .actions a:nth-child(3):hover {
+        background: #219653;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+    .actions .delete-link {
+        background:  var(--error);
+        color: var(--white);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        display: inline-block;
+        text-align: center;
+        min-width: 80px;
+        cursor: pointer;
+        outline: inherit;
+        border: none;
+    }
+
+    .actions .delete-link:hover {
+        background: #C0392B;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+    }
+
+    .actions .release-btn {
+        background: var(--success);
+        color: var(--white);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        display: inline-block;
+        text-align: center;
+        min-width: 80px;
+        cursor: pointer;
+        outline: inherit;
+        border: none;
+    }
+
+    .actions .release-btn:hover {
+        background: #219653;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: var(--white);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px var(--shadow);
+        color: var(--dark-grey);
+        margin-bottom: 2rem;
+    }
+
+    .empty-state p {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state .action-btn {
+        margin: 0 auto;
+    }
+
+    /* Recent Activity */
+    .recent-activity {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px var(--shadow);
+        margin-bottom: 2rem;
+    }
+
+    .recent-activity h3 {
+        color: var(--primary-blue);
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--accent-gold);
+        display: inline-block;
+    }
+
+    .activity-list {
+        list-style: none;
+    }
+
+    .activity-item {
+        padding: 1rem;
+        border-bottom: 1px solid var(--medium-grey);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: var(--transition);
+    }
+
+    .activity-item:hover {
+        background: var(--light-grey);
+        transform: translateX(5px);
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--light-grey);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: var(--primary-blue);
+        flex-shrink: 0;
+    }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        font-weight: 600;
+        color: var(--charcoal);
+        margin-bottom: 0.2rem;
+    }
+
+    .activity-time {
+        font-size: 0.8rem;
+        color: var(--dark-grey);
+    }
+
+    /* Exam Status Badges */
+    .exam-status {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-active {
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--success);
+        border: 1px solid var(--success);
+    }
+
+    .status-draft {
+        background: rgba(243, 156, 18, 0.1);
+        color: var(--warning);
+        border: 1px solid var(--warning);
+    }
+
+    .status-completed {
+        background: rgba(41, 128, 185, 0.1);
+        color: var(--hover-blue);
+        border: 1px solid var(--hover-blue);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        th, td {
+            padding: 1rem 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        .dashboard-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+        
+        .actions {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        th, td {
+            padding: 0.8rem 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .dashboard-stats {
+            grid-template-columns: 1fr;
+        }
+        
+        .stat-card {
+            padding: 1.2rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+        
+        .action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-stats, table, .quick-actions, .recent-activity {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+</style>
+
+<!-- Dashboard Statistics -->
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <div class="stat-number">{{ exams|length }}</div>
+        <div class="stat-label">Total Exams</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">
+            {% if exams %}
+                {{ (exams|map(attribute='completion_rate')|sum / exams|length)|round(1) }}%
+            {% else %}
+                0%
+            {% endif %}
+        </div>
+        <div class="stat-label">Avg Completion</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">
+            {% set total_submissions = exams|map(attribute='submission_count')|sum %}
+            {{ total_submissions }}
+        </div>
+        <div class="stat-label">Total Submissions</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">
+            {% set active_exams = exams|selectattr('is_active', 'equalto', true)|list %}
+            {{ active_exams|length }}
+        </div>
+        <div class="stat-label">Active Exams</div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+    <h3>Quick Actions</h3>
+    <div class="action-buttons">
+        <a href="{{ url_for('create_exam') }}" class="action-btn action-btn-primary">
+            <i class="fas fa-plus"></i> Create New Exam
+        </a>
+        <a href="{{ url_for('teacher_documentation') }}" class="action-btn">
+            <i class="fas fa-book"></i> Documentation
+        </a>
+    </div>
+</div>
+
+<div class="dashboard-layout">
+    <!-- Main Content -->
+    <div>
+        <!-- Exams Section -->
+        <h2>Your Exams</h2>
+        {% if exams %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Class/Subject</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                        <th>Submissions</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exam in exams %}
+                    <tr>
+                        <td>{{ exam.title }}</td>
+                        <td>{{ exam.class }}</td>
+                        <td>{{ exam.duration }} minutes</td>
+                        <td>
+                            {% if exam.is_active %}
+                                <span class="exam-status status-active">Active</span>
+                            {% else %}
+                                <span class="exam-status status-draft">Draft</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span style="font-weight: 600;">{{ exam.submission_count or 0 }}</span>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a href="{{ url_for('edit_exam', exam_id=exam.id) }}">Edit</a>
+                                <a href="{{ url_for('manage_exam', exam_id=exam.id) }}">Manage</a>
+                                <a href="{{ url_for('teacher_analytics', exam_id=exam.id) }}">Analytics</a>
+                                <a href="{{ url_for('delete_exam', exam_id=exam.id) }}" class="delete-link">
+                                    Delete
+                                </a>
+                                {% if exam.delay_results %}
+                                <form action="{{ url_for('release_exam_results', exam_id=exam.id) }}" method="post" style="display: inline;" class="release-result-form">
+                                    <button type="submit" class="release-btn">Release Results</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state">
+                <p>You haven't created any exams yet.</p>
+                <a href="{{ url_for('create_exam') }}" class="action-btn action-btn-primary">
+                    <i class="fas fa-plus"></i> Create Your First Exam
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div>
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+            <h3>Recent Activity</h3>
+            <ul class="activity-list">
+                {% if activities %}
+                    {% for activity in activities %}
+                    <li class="activity-item">
+                        <div class="activity-icon">{{ activity.icon }}</div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ activity.title }}</div>
+                            <div class="activity-time">{{ activity.time | strftime_wat }}</div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="activity-item">
+                        <div class="activity-content">
+                            <div class="activity-title">No recent activity to display.</div>
+                            <div class="activity-time">Activity will appear here</div>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add enhanced confirmation for delete actions
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteLinks = document.querySelectorAll('.delete-link');
+        
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const row = this.closest('tr');
+                const examTitle = row.cells[0].textContent;
+                
+                if (!confirm(`Are you sure you want to delete "${examTitle}"? This will permanently remove the exam and all associated data.`)) {
+                    e.preventDefault();
+                }
+            });
+        });
+
+        // Add visual feedback for exam status
+        const statusCells = document.querySelectorAll('td:nth-child(4)');
+        statusCells.forEach(cell => {
+            if (cell.textContent.includes('Active')) {
+                cell.style.fontWeight = '600';
+            }
+        });
+
+        // Add loading state for action buttons
+        const actionButtons = document.querySelectorAll('.action-btn');
+        actionButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.href.includes('javascript')) {
+                    this.classList.add('loading');
+                    const originalText = this.innerHTML;
+                    this.innerHTML = 'Loading...';
+                    
+                    // Reset after 3 seconds if still on page
+                    setTimeout(() => {
+                        this.classList.remove('loading');
+                        this.innerHTML = originalText;
+                    }, 3000);
+                }
+            });
+        });
+
+        // Add activity item animations
+        const activityItems = document.querySelectorAll('.activity-item');
+        activityItems.forEach((item, index) => {
+            item.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+</script>
+{% endblock %}

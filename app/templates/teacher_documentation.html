@@ -1,0 +1,234 @@
+{% extends "_layout.html" %}
+
+{% block title %}Teacher Documentation{% endblock %}
+
+{% block content %}
+
+<style>
+.documentation-card {
+    background: linear-gradient(135deg, #F4F6F8 0%, #FFFFFF 100%);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(44, 62, 80, 0.15);
+    transition: all 0.3s ease;
+    margin-bottom: 2rem;
+}
+
+.documentation-card:hover {
+    box-shadow: 0 8px 15px rgba(44, 62, 80, 0.2);
+}
+
+.documentation-header {
+    background: linear-gradient(135deg, #2980B9 0%, #2C3E50 100%);
+    color: #FFFFFF;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 1.5rem;
+    border: none;
+}
+
+.documentation-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    margin: 0;
+    color: #FFFFFF;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.documentation-body {
+    padding: 2.5rem;
+    background: #FFFFFF;
+    border-radius: 0 0 12px 12px;
+}
+
+.welcome-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 600;
+    color: #2C3E50;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.welcome-text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #5D6D7E;
+    line-height: 1.6;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.section-divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #F1C40F 50%, transparent 100%);
+    margin: 2rem 0;
+}
+
+.feature-section {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: #F8F9FA;
+    border-radius: 8px;
+    border-left: 4px solid #2980B9;
+    transition: all 0.3s ease;
+}
+
+.feature-section:hover {
+    background: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.1);
+    transform: translateX(4px);
+}
+
+.feature-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 600;
+    color: #2C3E50;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.feature-title::before {
+    content: "•";
+    color: #F1C40F;
+    font-size: 2rem;
+    margin-right: 0.5rem;
+}
+
+.feature-description {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #5D6D7E;
+    line-height: 1.6;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.feature-list {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #5D6D7E;
+    line-height: 1.6;
+    padding-left: 1.5rem;
+}
+
+.feature-list.ordered {
+    padding-left: 2rem;
+}
+
+.feature-list li {
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+}
+
+.list-label {
+    color: #2980B9;
+    font-weight: 600;
+}
+
+.return-btn {
+    background: linear-gradient(135deg, #2980B9 0%, #2C3E50 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #FFFFFF;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(44, 62, 80, 0.2);
+    display: inline-block;
+}
+
+.return-btn:hover {
+    background: linear-gradient(135deg, #3498DB 0%, #34495E 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(44, 62, 80, 0.3);
+    color: #FFFFFF;
+}
+
+.return-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(44, 62, 80, 0.2);
+}
+
+.return-btn:focus {
+    outline: 2px solid #F1C40F;
+    outline-offset: 2px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container.mt-5 {
+        margin-top: 1.5rem !important;
+    }
+    
+    .documentation-body {
+        padding: 1.5rem;
+    }
+    
+    .documentation-title {
+        font-size: 1.75rem;
+    }
+    
+    .welcome-title {
+        font-size: 1.3rem;
+    }
+    
+    .feature-section {
+        padding: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .feature-title {
+        font-size: 1.2rem;
+    }
+}
+</style>
+
+<div class="container mt-5">
+    <div class="card documentation-card">
+        <div class="card-header documentation-header">
+            <h2 class="card-title documentation-title">Teacher Documentation</h2>
+        </div>
+        <div class="card-body documentation-body">
+            <h3 class="welcome-title">Welcome to the Teacher Dashboard!</h3>
+            <p class="welcome-text">This guide will walk you through the key features and functionalities available to you.</p>
+            <hr class="section-divider">
+
+            <div class="feature-section">
+                <h4 class="feature-title">Creating an Exam</h4>
+                <p class="feature-description">To create an exam, click on the "Create New Exam" button on your dashboard. You will need to provide the following information:</p>
+                <ul class="feature-list">
+                    <li><strong class="list-label">Title:</strong> The title of the exam.</li>
+                    <li><strong class="list-label">Class:</strong> The class for which the exam is intended.</li>
+                    <li><strong class="list-label">Duration:</strong> The duration of the exam in minutes.</li>
+                    <li><strong class="list-label">Description:</strong> Instructions or any other relevant information for the students.</li>
+                </ul>
+            </div>
+
+            <div class="feature-section">
+                <h4 class="feature-title">Adding Questions</h4>
+                <p class="feature-description">After creating an exam, you can add questions in two ways:</p>
+                <ol class="feature-list ordered">
+                    <li><strong class="list-label">Manually:</strong> Click on the "Add Question" button to add questions one by one. You can choose from different question types, such as multiple-choice, single-choice, and short answer.</li>
+                    <li><strong class="list-label">Bulk Upload:</strong> You can upload a batch of questions using an Excel or CSV file. The file should have the following columns: `question_text`, `question_type`, `option1`, `option2`, `option3`, `option4`, and `correct_answer`.</li>
+                </ol>
+            </div>
+
+            <div class="feature-section">
+                <h4 class="feature-title">Managing Exams</h4>
+                <p class="feature-description">You can manage your exams from the dashboard. You can view the number of submissions, see the completion rate, and delete exams that are no longer needed.</p>
+            </div>
+
+            <div class="feature-section">
+                <h4 class="feature-title">Viewing Analytics</h4>
+                <p class="feature-description">Click on the "Analytics" button to view detailed analytics for each exam. You can see the scores of each student, the average score, and the completion rate.</p>
+            </div>
+
+            <hr class="section-divider">
+            <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-primary return-btn">Return to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

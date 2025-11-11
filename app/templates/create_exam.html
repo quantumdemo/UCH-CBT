@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Exam</title>
+    <style>
+        /* Create Exam Specific Styles */
+        :root {
+            --primary-blue: #2C3E50;
+            --accent-gold: #F1C40F;
+            --hover-blue: #2980B9;
+            --secondary-indigo: #5D6D7E;
+            --charcoal: #34495E;
+            --white: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --medium-grey: #E5E9EC;
+            --dark-grey: #7F8C8D;
+            --shadow: rgba(44, 62, 80, 0.15);
+            --success: #27AE60;
+            --error: #E74C3C;
+            --warning: #F39C12;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-grey) 0%, var(--white) 100%);
+            color: var(--charcoal);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--primary-blue);
+            color: var(--white);
+            box-shadow: 0 4px 12px var(--shadow);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--white);
+            margin: 0;
+            text-align: center;
+        }
+
+        /* Form Styles */
+        form {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="datetime-local"],
+        textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--medium-grey);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+            color: var(--charcoal);
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="datetime-local"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--hover-blue);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        /* Checkbox Styles */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: var(--light-grey);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .checkbox-group:hover {
+            background: var(--medium-grey);
+            transform: translateX(5px);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Button Styles */
+        .btn {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: var(--hover-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(41, 128, 185, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Form Section Styling */
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--light-grey);
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 1rem;
+        }
+
+        .form-section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-gold);
+            display: inline-block;
+        }
+
+        /* DateTime Input Styling */
+        input[type="datetime-local"] {
+            cursor: pointer;
+        }
+
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            background-color: var(--primary-blue);
+            padding: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 0 10px;
+            }
+            
+            form {
+                padding: 2rem 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            input[type="text"],
+            input[type="number"],
+            input[type="datetime-local"],
+            textarea {
+                padding: 0.9rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 1.5rem 1rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+            
+            .btn {
+                padding: 0.9rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        form {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .form-group {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.15s; }
+        .form-group:nth-child(3) { animation-delay: 0.2s; }
+        .form-group:nth-child(4) { animation-delay: 0.25s; }
+        .form-group:nth-child(5) { animation-delay: 0.3s; }
+        .form-group:nth-child(6) { animation-delay: 0.35s; }
+        .checkbox-group:nth-child(7) { animation-delay: 0.4s; }
+        .checkbox-group:nth-child(8) { animation-delay: 0.45s; }
+        .btn { animation-delay: 0.5s; }
+
+        /* Focus States */
+        .form-group:focus-within label {
+            color: var(--hover-blue);
+        }
+
+        /* Required Field Indicator */
+        label[for]:after {
+            content: ' *';
+            color: var(--error);
+            font-weight: bold;
+        }
+
+        /* Optional Field Styling */
+        .optional {
+            color: var(--dark-grey);
+            font-size: 0.9rem;
+            font-weight: normal;
+            margin-left: 0.3rem;
+        }
+
+        /* Checkbox Container */
+        .checkbox-container {
+            background: var(--light-grey);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .checkbox-container h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Create New Exam</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <form action="{{ url_for('create_exam') }}" method="post" class="create-exam-form">
+                <div class="form-section">
+                    <h3 class="form-section-title">Basic Information</h3>
+                    <div class="form-group">
+                        <label for="title">Exam Title</label>
+                        <input type="text" id="title" name="title" required placeholder="Enter exam title">
+                    </div>
+                    <div class="form-group">
+                        <label for="class_">Class/Subject</label>
+                        <input type="text" id="class_" name="class_" required placeholder="Enter class or subject">
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duration (minutes)</label>
+                        <input type="number" id="duration" name="duration" required min="1" placeholder="e.g., 60">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="form-section-title">Instructions & Timing</h3>
+                    <div class="form-group">
+                        <label for="description">Instructions <span class="optional">(optional)</span></label>
+                        <textarea id="description" name="description" placeholder="Enter exam instructions for students..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <p>Current server time: <strong>{{ current_time }}</strong></p>
+                        <label for="start_time">Start Time <span class="optional">(optional)</span></label>
+                        <input type="datetime-local" id="start_time" name="start_time">
+                    </div>
+                    <div class="form-group">
+                        <label for="end_time">End Time <span class="optional">(optional)</span></label>
+                        <input type="datetime-local" id="end_time" name="end_time">
+                    </div>
+                </div>
+
+                <div class="checkbox-container">
+                    <h3>Exam Settings</h3>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="randomize_questions" name="randomize_questions" value="true">
+                        <label for="randomize_questions">Randomize Questions Order</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="delay_results" name="delay_results" value="true">
+                        <label for="delay_results">Delay Results Display</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Create Exam</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Add form validation and enhancements
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const startTime = document.getElementById('start_time');
+            const endTime = document.getElementById('end_time');
+
+            // Validate end time is after start time
+            if (startTime && endTime) {
+                startTime.addEventListener('change', validateTimes);
+                endTime.addEventListener('change', validateTimes);
+            }
+
+            function validateTimes() {
+                if (startTime.value && endTime.value) {
+                    const start = new Date(startTime.value);
+                    const end = new Date(endTime.value);
+                    
+                    if (end <= start) {
+                        endTime.setCustomValidity('End time must be after start time');
+                        endTime.style.borderColor = 'var(--error)';
+                    } else {
+                        endTime.setCustomValidity('');
+                        endTime.style.borderColor = '';
+                    }
+                }
+            }
+
+            // Add loading state to form submission
+            form.addEventListener('submit', function(e) {
+                const btn = this.querySelector('.btn');
+                btn.classList.add('loading');
+                btn.innerHTML = 'Creating Exam...';
+                
+                // Re-enable after 3 seconds if still on page (for demo)
+                setTimeout(() => {
+                    btn.classList.remove('loading');
+                    btn.innerHTML = 'Create Exam';
+                }, 3000);
+            });
+
+            // Add focus effects
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

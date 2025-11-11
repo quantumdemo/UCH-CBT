@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam: {{ exam.title }}</title>
+    <style>
+        /* Take Exam Specific Styles */
+        :root {
+            --primary-blue: #2C3E50;
+            --accent-gold: #F1C40F;
+            --hover-blue: #2980B9;
+            --secondary-indigo: #5D6D7E;
+            --charcoal: #34495E;
+            --white: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --medium-grey: #E5E9EC;
+            --dark-grey: #7F8C8D;
+            --shadow: rgba(44, 62, 80, 0.15);
+            --success: #27AE60;
+            --error: #E74C3C;
+            --warning: #F39C12;
+            --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, #2980B9 0%, #2C3E50 100%);
+            --gradient-success: linear-gradient(135deg, #27AE60 0%, #219653 100%);
+            --gradient-warning: linear-gradient(135deg, #F39C12 0%, #D4AC0D 100%);
+            --gradient-error: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-grey) 0%, #E8ECF1 100%);
+            color: var(--charcoal);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: 0 4px 20px rgba(44, 62, 80, 0.25);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Profile Avatar */
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--charcoal);
+            box-shadow: 0 4px 12px rgba(241, 196, 15, 0.4);
+            border: 3px solid var(--white);
+            transition: var(--transition);
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(241, 196, 15, 0.6);
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Timer Styles */
+        #timer {
+            background: var(--accent-gold);
+            color: var(--charcoal);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(241, 196, 15, 0.4);
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        #timer.warning {
+            background: var(--gradient-warning);
+            color: var(--white);
+            animation: pulse 1s infinite;
+            box-shadow: 0 4px 16px rgba(243, 156, 18, 0.5);
+        }
+
+        #timer.critical {
+            background: var(--gradient-error);
+            color: var(--white);
+            animation: pulse 0.5s infinite;
+            box-shadow: 0 4px 20px rgba(231, 76, 60, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Main Content */
+        main {
+            padding: 2.5rem 0;
+        }
+
+        /* Exam Container */
+        .exam-container {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        /* Questions Wrapper */
+        .questions-wrapper {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 12px 35px var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .questions-wrapper:hover {
+            box-shadow: 0 15px 40px rgba(44, 62, 80, 0.2);
+        }
+
+        /* Question Styles */
+        .question {
+            display: none;
+            padding: 2.5rem;
+            min-height: 480px;
+            background: var(--white);
+        }
+
+        .question.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateX(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
+        .question h3 {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question h3::before {
+            content: "Q";
+            background: var(--accent-gold);
+            color: var(--charcoal);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .question p {
+            font-size: 1.15rem;
+            margin-bottom: 1.8rem;
+            line-height: 1.7;
+            color: var(--charcoal);
+        }
+
+        .question img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 6px 20px var(--shadow);
+            border: 1px solid var(--medium-grey);
+            transition: var(--transition);
+        }
+
+        .question img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.25);
+        }
+
+        /* Answer Options */
+        label {
+            display: block;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1rem;
+            background: var(--light-grey);
+            border: 2px solid var(--medium-grey);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        label::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: var(--hover-blue);
+            transition: var(--transition);
+            z-index: 0;
+        }
+
+        label:hover {
+            background: var(--medium-grey);
+            border-color: var(--hover-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px var(--shadow);
+        }
+
+        label:hover::before {
+            width: 4px;
+        }
+
+        label input[type="radio"],
+        label input[type="checkbox"] {
+            margin-right: 1.2rem;
+            transform: scale(1.3);
+            accent-color: var(--hover-blue);
+            position: relative;
+            z-index: 1;
+        }
+
+        label.selected {
+            background: rgba(41, 128, 185, 0.12);
+            border-color: var(--hover-blue);
+            color: var(--hover-blue);
+            box-shadow: 0 4px 12px rgba(41, 128, 185, 0.2);
+        }
+
+        label.selected::before {
+            width: 4px;
+            background: var(--hover-blue);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            border: 2px solid var(--medium-grey);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 140px;
+            transition: var(--transition);
+            background: var(--light-grey);
+            line-height: 1.6;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--hover-blue);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(41, 128, 185, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation Panel */
+        .navigation-panel {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 12px 35px var(--shadow);
+            position: sticky;
+            top: 120px;
+            border: 1px solid var(--medium-grey);
+        }
+
+        .navigation-panel h3 {
+            color: var(--primary-blue);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        #question-nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-button {
+            background: var(--light-grey);
+            border: 2px solid var(--medium-grey);
+            color: var(--charcoal);
+            padding: 0.9rem 0.6rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-button:hover {
+            background: var(--medium-grey);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .nav-button.active {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3);
+        }
+
+        .nav-button.answered {
+            background: var(--gradient-success);
+            color: var(--white);
+            border-color: var(--success);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .nav-button.current {
+            box-shadow: 0 0 0 3px var(--accent-gold), 0 4px 12px var(--shadow);
+            transform: scale(1.05);
+        }
+
+        /* Button Styles */
+        .btn {
+            background: var(--secondary-indigo);
+            color: var(--white);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: block;
+            width: 100%;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: var(--hover-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(41, 128, 185, 0.4);
+        }
+
+        .btn:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .btn:disabled {
+            background: var(--dark-grey);
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-success);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #219653 0%, #1E8449 100%);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-danger {
+            background: var(--gradient-error);
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: linear-gradient(135deg, #C0392B 0%, #A93226 100%);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--medium-grey);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--success));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: linear-gradient(
+                -45deg,
+                rgba(255, 255, 255, 0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.2) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 20px 20px;
+            animation: moveStripes 2s linear infinite;
+        }
+
+        @keyframes moveStripes {
+            0% { background-position: 0 0; }
+            100% { background-position: 20px 0; }
+        }
+
+        /* Warning Modal */
+        .warning-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .warning-modal.active {
+            display: flex;
+            animation: modalFadeIn 0.4s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--accent-gold);
+            animation: modalSlideIn 0.4s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: scale(0.9) translateY(-20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .modal-content h3 {
+            color: var(--error);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+        }
+
+        .modal-content p {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--charcoal);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .exam-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .navigation-panel {
+                position: static;
+                order: -1;
+            }
+
+            #question-nav-buttons {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 0 10px;
+            }
+
+            header .container {
+                flex-direction: column;
+                gap: 1.2rem;
+                text-align: center;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            #question-nav-buttons {
+                grid-template-columns: repeat(5, 1fr);
+            }
+
+            .question {
+                padding: 2rem;
+            }
+
+            .navigation-panel {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #question-nav-buttons {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .question {
+                padding: 1.5rem;
+                min-height: 400px;
+            }
+
+            label {
+                padding: 1rem 1.2rem;
+            }
+
+            .btn {
+                padding: 0.9rem 1.2rem;
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>{{ exam.title }}</h1>
+                <div class="profile-avatar">
+                    {% if current_user.profile_image %}
+                        <img src="{{ url_for('static', filename='uploads/profiles/' + current_user.profile_image) }}" alt="Profile Image">
+                    {% else %}
+                        {{ current_user.fullname[0] | upper }}
+                    {% endif %}
+                </div>
+            </div>
+            <div id="timer">Time Left: </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="exam-container">
+                <div class="questions-wrapper">
+                    <form id="exam-form">
+                        {% for question in questions %}
+                        <div class="question" id="question-{{ loop.index0 }}">
+                            <h3>Question {{ loop.index }}</h3>
+                            <p>{{ question.question_text | safe }}</p>
+                            {% if question.question_image %}
+                                <img src="{{ url_for('static', filename='uploads/' + question.question_image) }}" alt="Question Image">
+                            {% endif %}
+                            {% if question.question_type in ['single-choice', 'multiple-choice'] %}
+                                {% set options = question.options | fromjson %}
+                                {% for option in options %}
+                                    <label>
+                                        <input type="{{ 'radio' if question.question_type == 'single-choice' else 'checkbox' }}"
+                                               name="answer_{{ question.id }}"
+                                               value="{{ loop.index0 }}"
+                                               onchange="saveAnswer({{ question.id }}, this.value, '{{ question.question_type }}')">
+                                        {{ option.text }}
+                                    </label>
+                                {% endfor %}
+                            {% else %}
+                                <textarea name="answer_{{ question.id }}"
+                                          rows="4"
+                                          placeholder="Type your answer here..."
+                                          onblur="saveAnswer({{ question.id }}, this.value, 'short-answer')"></textarea>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </form>
+                </div>
+
+                <div class="navigation-panel">
+                    <h3>Exam Navigation</h3>
+                    
+                    <!-- Progress Bar -->
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span id="progressPercentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question Navigation -->
+                    <div id="question-nav-buttons">
+                        {% for question in questions %}
+                        <button class="nav-button" onclick="showQuestion({{ loop.index0 }})">{{ loop.index }}</button>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Navigation Controls -->
+                    <button class="btn" onclick="showQuestion(currentQuestion - 1)" id="prev-btn">Previous</button>
+                    <button class="btn" onclick="showQuestion(currentQuestion + 1)" id="next-btn">Next</button>
+                    <button class="btn btn-primary" onclick="submitExam()">Submit Exam</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Warning Modal -->
+    <div class="warning-modal" id="warningModal">
+        <div class="modal-content">
+            <h3 id="warningTitle">Warning</h3>
+            <p id="warningMessage"></p>
+            <button class="btn btn-danger" onclick="closeWarning()">I Understand</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = document.querySelectorAll('.question');
+        const navButtons = document.querySelectorAll('.nav-button');
+        let currentQuestion = 0;
+        const submissionId = {{ submission_id | tojson }};
+        const examDuration = {{ exam.duration | tojson }}; // in minutes
+        let timeLeft = examDuration * 60;
+        let tabSwitchCount = 0;
+        let answeredQuestions = new Set();
+
+        function showQuestion(index) {
+            if (index < 0 || index >= questions.length) return;
+
+            questions[currentQuestion].classList.remove('active');
+            navButtons[currentQuestion].classList.remove('current');
+
+            currentQuestion = index;
+
+            questions[currentQuestion].classList.add('active');
+            navButtons[currentQuestion].classList.add('current');
+
+            document.getElementById('prev-btn').disabled = currentQuestion === 0;
+            document.getElementById('next-btn').disabled = currentQuestion === questions.length - 1;
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = ((answeredQuestions.size / questions.length) * 100).toFixed(1);
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressPercentage').textContent = `${progress}%`;
+        }
+
+        async function saveAnswer(questionId, answerValue, questionType) {
+            let answer = answerValue;
+            
+            // Update UI for selected options
+            if (questionType === 'single-choice') {
+                const labels = document.querySelectorAll(`input[name="answer_${questionId}"]`);
+                labels.forEach(label => {
+                    label.closest('label').classList.remove('selected');
+                });
+                event.target.closest('label').classList.add('selected');
+            } else if (questionType === 'multiple-choice') {
+                const checked = document.querySelectorAll(`input[name="answer_${questionId}"]:checked`);
+                answer = Array.from(checked).map(c => c.value).join(',');
+                
+                // Update label styles for checked options
+                const labels = document.querySelectorAll(`input[name="answer_${questionId}"]`);
+                labels.forEach(label => {
+                    if (label.checked) {
+                        label.closest('label').classList.add('selected');
+                    } else {
+                        label.closest('label').classList.remove('selected');
+                    }
+                });
+            }
+
+            // Mark as answered
+            answeredQuestions.add(questionId);
+            navButtons[currentQuestion].classList.add('answered');
+            updateProgress();
+
+            // Save to server
+            await fetch(`/student/exam/save_answer`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    submission_id: submissionId,
+                    question_id: questionId,
+                    answer_text: answer
+                })
+            });
+        }
+
+        async function submitExam() {
+            if (confirm('Are you sure you want to submit the exam? You cannot return to the exam after submission.')) {
+                forceSubmitExam();
+            }
+        }
+
+        async function forceSubmitExam() {
+            const response = await fetch(`/student/exam/submit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ submission_id: submissionId })
+            });
+            if (response.ok) {
+                window.location.href = "{{ url_for('student_dashboard') }}";
+            }
+        }
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            
+            const timer = document.getElementById('timer');
+            timer.textContent = `Time Left: ${minutes}:${seconds}`;
+            
+            // Update timer styling based on remaining time
+            if (timeLeft <= 300) { // 5 minutes
+                timer.classList.add('critical');
+                timer.classList.remove('warning');
+            } else if (timeLeft <= 600) { // 10 minutes
+                timer.classList.add('warning');
+                timer.classList.remove('critical');
+            } else {
+                timer.classList.remove('warning', 'critical');
+            }
+            
+            if (timeLeft > 0) {
+                timeLeft--;
+            } else {
+                clearInterval(timerInterval);
+                showWarning('Time is up!', 'Your exam will be submitted automatically.');
+                setTimeout(forceSubmitExam, 3000);
+            }
+        }
+
+        function showWarning(title, message) {
+            document.getElementById('warningTitle').textContent = title;
+            document.getElementById('warningMessage').textContent = message;
+            document.getElementById('warningModal').classList.add('active');
+        }
+
+        function closeWarning() {
+            document.getElementById('warningModal').classList.remove('active');
+        }
+
+        // Tab switching detection
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                tabSwitchCount++;
+                if (tabSwitchCount === 1) {
+                    showWarning('Warning 1', 'You have switched tabs. The exam will be submitted after two more attempts.');
+                } else if (tabSwitchCount === 2) {
+                    showWarning('Final Warning', 'This is your final warning. If you switch tabs again, the exam will be submitted automatically.');
+                } else if (tabSwitchCount >= 3) {
+                    showWarning('Exam Submitted', 'You have switched tabs three times. The exam has been submitted.');
+                    setTimeout(forceSubmitExam, 2000);
+                }
+            }
+        });
+
+        // Prevent context menu and keyboard shortcuts
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+            }
+        });
+
+        // Initialize
+        showQuestion(0);
+        const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+    </script>
+</body>
+</html>

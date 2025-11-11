@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Question</title>
+    <style>
+        /* Edit Question Specific Styles */
+        :root {
+            --primary-blue: #2C3E50;
+            --accent-gold: #F1C40F;
+            --hover-blue: #2980B9;
+            --secondary-indigo: #5D6D7E;
+            --charcoal: #34495E;
+            --white: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --medium-grey: #E5E9EC;
+            --dark-grey: #7F8C8D;
+            --shadow: rgba(44, 62, 80, 0.15);
+            --success: #27AE60;
+            --error: #E74C3C;
+            --warning: #F39C12;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-grey) 0%, var(--white) 100%);
+            color: var(--charcoal);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--primary-blue);
+            color: var(--white);
+            box-shadow: 0 4px 12px var(--shadow);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--white);
+            margin: 0;
+            text-align: center;
+        }
+
+        /* Form Styles */
+        form {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            font-size: 1rem;
+        }
+
+        textarea, input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--medium-grey);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+            color: var(--charcoal);
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--hover-blue);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Current Image Styling */
+        .current-image {
+            background: var(--light-grey);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.8rem;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .current-image label {
+            margin-bottom: 0.3rem;
+            color: var(--dark-grey);
+            font-weight: 500;
+        }
+
+        .current-image span {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        /* File Input Styling */
+        input[type="file"] {
+            padding: 0.8rem;
+            background: var(--light-grey);
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            background: var(--secondary-indigo);
+            color: var(--white);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: var(--hover-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Options Container */
+        #options-container {
+            background: var(--light-grey);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border: 1px solid var(--medium-grey);
+        }
+
+        #options-container label {
+            font-size: 1.1rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        #options-wrapper {
+            margin-bottom: 1rem;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            border: 1px solid var(--medium-grey);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .option-item:hover {
+            border-color: var(--hover-blue);
+            box-shadow: 0 2px 8px var(--shadow);
+            transform: translateX(5px);
+        }
+
+        .option-item input[type="text"] {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .option-item label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .option-item input[type="radio"],
+        .option-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--success);
+            cursor: pointer;
+        }
+
+        /* Correct Option Styling */
+        .option-item.correct-option {
+            border-left: 4px solid var(--success);
+            background: rgba(39, 174, 96, 0.05);
+        }
+
+        /* Short Answer Container */
+        #short-answer-container {
+            background: var(--light-grey);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border: 1px solid var(--medium-grey);
+        }
+
+        /* Button Styles */
+        .btn {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: var(--hover-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(41, 128, 185, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* TinyMCE Customization */
+        .tox-tinymce {
+            border-radius: 8px !important;
+            border: 2px solid var(--medium-grey) !important;
+            transition: var(--transition) !important;
+        }
+
+        .tox-tinymce:focus-within {
+            border-color: var(--hover-blue) !important;
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1) !important;
+        }
+
+        /* Question Type Indicator */
+        .question-type-badge {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: var(--charcoal);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 0 10px;
+            }
+            
+            form {
+                padding: 2rem 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .option-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.8rem;
+            }
+            
+            .option-item label {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 1.5rem 1rem;
+            }
+            
+            #options-container,
+            #short-answer-container {
+                padding: 1rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        form {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .form-group {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Auto-detect and style correct options */
+        .option-item input[type="radio"]:checked,
+        .option-item input[type="checkbox"]:checked {
+            transform: scale(1.1);
+        }
+    </style>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+          ClassicEditor
+              .create( document.querySelector( '#question_text' ) )
+              .catch( error => {
+                  console.error( error );
+              } );
+
+      // Add visual feedback for correct options
+      document.addEventListener('DOMContentLoaded', function() {
+          const optionItems = document.querySelectorAll('.option-item');
+          
+          optionItems.forEach(item => {
+              const radio = item.querySelector('input[type="radio"]');
+              const checkbox = item.querySelector('input[type="checkbox"]');
+              
+              if (radio && radio.checked) {
+                  item.classList.add('correct-option');
+              }
+              
+              if (checkbox && checkbox.checked) {
+                  item.classList.add('correct-option');
+              }
+              
+              // Update styling when selection changes
+              if (radio) {
+                  radio.addEventListener('change', function() {
+                      optionItems.forEach(i => i.classList.remove('correct-option'));
+                      if (this.checked) {
+                          item.classList.add('correct-option');
+                      }
+                  });
+              }
+              
+              if (checkbox) {
+                  checkbox.addEventListener('change', function() {
+                      if (this.checked) {
+                          item.classList.add('correct-option');
+                      } else {
+                          item.classList.remove('correct-option');
+                      }
+                  });
+              }
+          });
+
+          // Add loading state to form submission
+          document.querySelector('form').addEventListener('submit', function(e) {
+              const btn = this.querySelector('.btn');
+              btn.classList.add('loading');
+              btn.innerHTML = 'Updating Question...';
+          });
+      });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Edit Question</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <form action="{{ url_for('edit_question', question_id=question.id) }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="question_text">Question Text</label>
+                    <div id="editor" style="height: 300px;">{{ question.question_text | safe }}</div>
+                    <input type="hidden" name="question_text" id="question_text">
+                </div>
+                <div class="form-group">
+                    <div class="current-image">
+                        <label>Current Image</label>
+                        <span>{{ question.question_image if question.question_image else 'No image uploaded' }}</span>
+                    </div>
+                    <label for="question_image">Update Image</label>
+                    <input type="file" id="question_image" name="question_image">
+                </div>
+
+                {% if question.question_type in ['single-choice', 'multiple-choice'] %}
+                <div id="options-container">
+                    <label>Options 
+                        <span class="question-type-badge">
+                            {{ 'Single Choice' if question.question_type == 'single-choice' else 'Multiple Choice' }}
+                        </span>
+                    </label>
+                    <div id="options-wrapper">
+                        {% set options = question.options | fromjson %}
+                        {% for option in options %}
+                        <div class="form-group option-item {{ 'correct-option' if option.correct }}">
+                            <input type="text" name="option_{{ loop.index0 }}" value="{{ option.text }}" required>
+                            <label>
+                                <input type="{{ 'radio' if question.question_type == 'single-choice' else 'checkbox' }}"
+                                       name="correct_option"
+                                       value="{{ loop.index0 }}"
+                                       {{ 'checked' if option.correct }}> 
+                                Correct Answer
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div id="short-answer-container">
+                    <label>Short Answer Question</label>
+                    <div class="form-group">
+                        <label for="correct_answer">Correct Answer</label>
+                        <input type="text" id="correct_answer" name="correct_answer" value="{{ question.correct_answer }}">
+                    </div>
+                </div>
+                {% endif %}
+
+                <button type="submit" class="btn">Update Question</button>
+            </form>
+        </div>
+    </main>
+    <script>
+        var quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+
+        var form = document.querySelector('form');
+        form.onsubmit = function() {
+            var question_text = document.querySelector('input[name=question_text]');
+            question_text.value = quill.root.innerHTML;
+        };
+    </script>
+</body>
+</html>

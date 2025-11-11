@@ -1,0 +1,585 @@
+{% extends "_layout.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block header %}
+    Student Dashboard
+{% endblock %}
+
+{% block nav %}
+<style>
+    /* Navigation Styles */
+    nav {
+        background: var(--secondary-indigo);
+        padding: 0.8rem 0;
+    }
+
+    nav ul {
+        display: flex;
+        list-style: none;
+        justify-content: center;
+        gap: 2rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav a {
+        color: var(--white);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    nav a:hover {
+        background: var(--hover-blue);
+        color: var(--white);
+        transform: translateY(-2px);
+    }
+
+    nav a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--accent-gold);
+        transition: var(--transition);
+        transform: translateX(-50%);
+    }
+
+    nav a:hover::after {
+        width: 80%;
+    }
+
+    /* Responsive Navigation */
+    @media (max-width: 768px) {
+        nav ul {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        nav ul {
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        nav a {
+            display: block;
+            width: 200px;
+            text-align: center;
+        }
+    }
+</style>
+
+<nav>
+    <ul>
+        <li><a href="{{ url_for('student_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('profile') }}">Profile</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Student Dashboard Specific Styles */
+    :root {
+        --primary-blue: #2C3E50;
+        --accent-gold: #F1C40F;
+        --hover-blue: #2980B9;
+        --secondary-indigo: #5D6D7E;
+        --charcoal: #34495E;
+        --white: #FFFFFF;
+        --light-grey: #F4F6F8;
+        --medium-grey: #E5E9EC;
+        --dark-grey: #7F8C8D;
+        --shadow: rgba(44, 62, 80, 0.15);
+        --success: #27AE60;
+        --error: #E74C3C;
+        --warning: #F39C12;
+        --transition: all 0.3s ease;
+    }
+
+    h2 {
+        color: var(--charcoal);
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid var(--accent-gold);
+        display: inline-block;
+    }
+
+    /* Section Spacing */
+    .dashboard-section {
+        margin-bottom: 3rem;
+    }
+
+    /* Divider */
+    hr {
+        border: none;
+        height: 2px;
+        background: var(--medium-grey);
+        margin: 2.5rem 0;
+        border-radius: 1px;
+    }
+
+    /* Table Styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--white);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px var(--shadow);
+        margin-bottom: 2rem;
+    }
+
+    thead {
+        background: var(--primary-blue);
+        color: var(--white);
+    }
+
+    th {
+        padding: 1.2rem 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    tbody tr {
+        transition: var(--transition);
+        border-bottom: 1px solid var(--medium-grey);
+    }
+
+    tbody tr:hover {
+        background: var(--light-grey);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    td {
+        padding: 1.2rem 1rem;
+        color: var(--charcoal);
+        font-weight: 500;
+    }
+
+    /* Button Styles */
+    .btn {
+        background: var(--success);
+        color: var(--white);
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-block;
+        text-align: center;
+        min-width: 100px;
+    }
+
+    .btn:hover {
+        background: #219653;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+    }
+
+    /* Action Links */
+    .action-link {
+        color: var(--hover-blue);
+        text-decoration: none;
+        font-weight: 600;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        transition: var(--transition);
+        display: inline-block;
+    }
+
+    .action-link:hover {
+        background: var(--light-grey);
+        color: var(--primary-blue);
+        transform: translateY(-1px);
+    }
+
+    /* Status Indicators */
+    .status-pending {
+        color: var(--warning);
+        font-weight: 600;
+    }
+
+    .status-not-released {
+        color: var(--dark-grey);
+        font-style: italic;
+    }
+
+    /* Score Styling */
+    .score-excellent {
+        color: var(--success);
+        font-weight: 700;
+    }
+
+    .score-good {
+        color: var(--warning);
+        font-weight: 600;
+    }
+
+    .score-poor {
+        color: var(--error);
+        font-weight: 600;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: var(--white);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px var(--shadow);
+        color: var(--dark-grey);
+        margin-bottom: 2rem;
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+
+    /* Dashboard Stats */
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px var(--shadow);
+        text-align: center;
+        border-top: 4px solid var(--accent-gold);
+        transition: var(--transition);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px var(--shadow);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        color: var(--dark-grey);
+        font-weight: 600;
+    }
+
+    /* Exam Status Badges */
+    .exam-status {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-available {
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--success);
+        border: 1px solid var(--success);
+    }
+
+    .status-completed {
+        background: rgba(41, 128, 185, 0.1);
+        color: var(--hover-blue);
+        border: 1px solid var(--hover-blue);
+    }
+
+    .status-pending-results {
+        background: rgba(243, 156, 18, 0.1);
+        color: var(--warning);
+        border: 1px solid var(--warning);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px var(--shadow);
+        margin-bottom: 2rem;
+    }
+
+    .quick-actions h3 {
+        color: var(--primary-blue);
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        th, td {
+            padding: 1rem 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        .dashboard-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+        
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        th, td {
+            padding: 0.8rem 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .dashboard-stats {
+            grid-template-columns: 1fr;
+        }
+        
+        .stat-card {
+            padding: 1.2rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-stats, table, .empty-state {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+</style>
+
+<!-- Dashboard Statistics -->
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <div class="stat-number">{{ available_exams|length }}</div>
+        <div class="stat-label">Available Exams</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ completed_exams|length }}</div>
+        <div class="stat-label">Completed Exams</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">
+            {% set scored_exams = completed_exams|selectattr('score', 'defined')|list %}
+            {{ (scored_exams|length * 100 / completed_exams|length)|round|int if completed_exams else 0 }}%
+        </div>
+        <div class="stat-label">Completion Rate</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">
+            {% if scored_exams %}
+                {{ (scored_exams|map(attribute='score')|sum / scored_exams|length)|round(1) }}
+            {% else %}
+                0
+            {% endif %}
+        </div>
+        <div class="stat-label">Average Score</div>
+    </div>
+</div>
+
+<!-- Available Exams Section -->
+<div class="dashboard-section">
+    <h2>Available Exams</h2>
+    {% if available_exams %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Class/Subject</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exam in available_exams %}
+                <tr>
+                    <td>{{ exam.title }}</td>
+                    <td>{{ exam.class_ }}</td>
+                    <td>{{ exam.duration }} minutes</td>
+                    <td>
+                        <span class="exam-status status-available">Available</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('exam_instructions', exam_id=exam.id) }}" class="btn">
+                            View Instructions
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="empty-state">
+            <p>No new exams are available at this time.</p>
+        </div>
+    {% endif %}
+</div>
+
+<hr>
+
+<!-- Completed Exams Section -->
+<div class="dashboard-section">
+    <h2>Completed Exams</h2>
+    {% if completed_exams %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Class/Subject</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exam in completed_exams %}
+                <tr>
+                    <td>{{ exam.title }}</td>
+                    <td>{{ exam.class_ }}</td>
+                    <td>
+                        {% if exam.delay_results %}
+                            <span class="status-pending">Pending</span>
+                        {% else %}
+                            {% if exam.score is not none %}
+                                {% if exam.score >= 80 %}
+                                    <span class="score-excellent">{{ exam.score }}%</span>
+                                {% elif exam.score >= 60 %}
+                                    <span class="score-good">{{ exam.score }}%</span>
+                                {% else %}
+                                    <span class="score-poor">{{ exam.score }}%</span>
+                                {% endif %}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if exam.delay_results %}
+                            <span class="exam-status status-pending-results">Results Pending</span>
+                        {% else %}
+                            <span class="exam-status status-completed">Completed</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not exam.delay_results %}
+                            <a href="{{ url_for('view_results', submission_id=exam.submission_id) }}" class="action-link">
+                                View Results
+                            </a>
+                        {% else %}
+                            <span class="status-not-released">Results not released</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="empty-state">
+            <p>You have not completed any exams yet.</p>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    // Add confirmation for starting exams
+    document.addEventListener('DOMContentLoaded', function() {
+        const startButtons = document.querySelectorAll('.btn');
+        
+        startButtons.forEach(btn => {
+            if (btn.textContent.includes('Start Exam')) {
+                btn.addEventListener('click', function(e) {
+                    const row = this.closest('tr');
+                    const examTitle = row.cells[0].textContent;
+                    const duration = row.cells[2].textContent;
+                    
+                    if (!confirm(`Are you ready to start "${examTitle}"? You will have ${duration} to complete it. Once started, the timer cannot be paused.`)) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+
+        // Add visual feedback for score ranges
+        const scoreCells = document.querySelectorAll('td:nth-child(3)');
+        scoreCells.forEach(cell => {
+            const scoreText = cell.textContent.trim();
+            if (scoreText.includes('%')) {
+                const score = parseInt(scoreText);
+                if (score >= 80) {
+                    cell.classList.add('score-excellent');
+                } else if (score >= 60) {
+                    cell.classList.add('score-good');
+                } else if (score < 60 && score > 0) {
+                    cell.classList.add('score-poor');
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

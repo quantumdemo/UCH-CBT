@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Question</title>
+    <style>
+        /* Add Question Specific Styles */
+        :root {
+            --primary-blue: #2C3E50;
+            --accent-gold: #F1C40F;
+            --hover-blue: #2980B9;
+            --secondary-indigo: #5D6D7E;
+            --charcoal: #34495E;
+            --white: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --medium-grey: #E5E9EC;
+            --dark-grey: #7F8C8D;
+            --shadow: rgba(44, 62, 80, 0.15);
+            --success: #27AE60;
+            --error: #E74C3C;
+            --warning: #F39C12;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-grey) 0%, var(--white) 100%);
+            color: var(--charcoal);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--primary-blue);
+            color: var(--white);
+            box-shadow: 0 4px 12px var(--shadow);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--white);
+            margin: 0;
+            text-align: center;
+        }
+
+        /* Form Styles */
+        form {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        textarea, input[type="text"], input[type="file"], select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--medium-grey);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        textarea:focus, input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: var(--hover-blue);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Button Styles */
+        .btn {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: var(--hover-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-indigo);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover-blue);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: var(--white);
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-danger:hover {
+            background: #C0392B;
+            transform: translateY(-1px);
+        }
+
+        /* Options Container */
+        #options-container {
+            background: var(--light-grey);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border: 1px solid var(--medium-grey);
+        }
+
+        #options-wrapper {
+            margin-bottom: 1rem;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            background: var(--white);
+            border-radius: 6px;
+            margin-bottom: 0.8rem;
+            border: 1px solid var(--medium-grey);
+            transition: var(--transition);
+        }
+
+        .option-item:hover {
+            border-color: var(--hover-blue);
+            box-shadow: 0 2px 5px var(--shadow);
+        }
+
+        .option-item input[type="text"] {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .option-item label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+            font-weight: normal;
+            white-space: nowrap;
+        }
+
+        /* TinyMCE Customization */
+        .tox-tinymce {
+            border-radius: 6px !important;
+            border: 2px solid var(--medium-grey) !important;
+            transition: var(--transition) !important;
+        }
+
+        .tox-tinymce:focus-within {
+            border-color: var(--hover-blue) !important;
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1) !important;
+        }
+
+        /* File Input Styling */
+        input[type="file"] {
+            padding: 0.5rem;
+            background: var(--light-grey);
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            background: var(--secondary-indigo);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: var(--hover-blue);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 0 10px;
+            }
+            
+            form {
+                padding: 1.5rem;
+            }
+            
+            .option-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.8rem;
+            }
+            
+            .option-item label {
+                justify-content: flex-start;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animation for showing/hiding containers */
+        #options-container, #short-answer-container {
+            transition: var(--transition);
+        }
+    </style>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <div class="editor-script">
+        <script>
+            ClassicEditor
+                .create( document.querySelector( '#question_text' ) )
+                .catch( error => {
+                    console.error( error );
+                } );
+        </script>
+    </div>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Add Question to {{ exam.title }}</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <form action="{{ url_for('add_question', exam_id=exam.id) }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="question_text">Question Text</label>
+                    <div id="editor" style="height: 300px;"></div>
+                    <input type="hidden" name="question_text" id="question_text">
+                </div>
+                <div class="form-group">
+                    <label for="question_image">Question Image</label>
+                    <input type="file" id="question_image" name="question_image">
+                </div>
+                <div class="form-group">
+                    <label for="question_type">Question Type</label>
+                    <select id="question_type" name="question_type" onchange="toggleOptions()">
+                        <option value="single-choice">Single Choice</option>
+                        <option value="multiple-choice">Multiple Choice</option>
+                        <option value="short-answer">Short Answer</option>
+                    </select>
+                </div>
+
+                <div id="options-container">
+                    <label>Options</label>
+                    <div id="options-wrapper">
+                        <!-- Options will be added here dynamically -->
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="addOption()">Add Option</button>
+                </div>
+
+                <div id="short-answer-container" style="display: none;">
+                    <div class="form-group">
+                        <label for="correct_answer">Correct Answer</label>
+                        <input type="text" id="correct_answer" name="correct_answer">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Save Question</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        function toggleOptions() {
+            const type = document.getElementById('question_type').value;
+            const optionsContainer = document.getElementById('options-container');
+            const shortAnswerContainer = document.getElementById('short-answer-container');
+
+            if (type === 'short-answer') {
+                optionsContainer.style.display = 'none';
+                shortAnswerContainer.style.display = 'block';
+            } else {
+                optionsContainer.style.display = 'block';
+                shortAnswerContainer.style.display = 'none';
+            }
+        }
+
+        function addOption() {
+            const wrapper = document.getElementById('options-wrapper');
+            const optionCount = wrapper.children.length;
+            const questionType = document.getElementById('question_type').value;
+            const inputType = questionType === 'single-choice' ? 'radio' : 'checkbox';
+
+            const newOption = document.createElement('div');
+            newOption.className = 'form-group option-item';
+            newOption.innerHTML = `
+                <input type="text" name="option_${optionCount}" placeholder="Option text" required>
+                <label>
+                    <input type="${inputType}" name="correct_option" value="${optionCount}"> Correct
+                </label>
+                <button type="button" class="btn-danger" onclick="this.parentElement.remove()">Remove</button>
+            `;
+            wrapper.appendChild(newOption);
+        }
+
+        // Initial call
+        toggleOptions();
+        addOption(); // Add one option by default
+        addOption();
+
+        var quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+
+        var form = document.querySelector('form');
+        form.onsubmit = function() {
+            var question_text = document.querySelector('input[name=question_text]');
+            question_text.value = quill.root.innerHTML;
+        };
+    </script>
+</body>
+</html>

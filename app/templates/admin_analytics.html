@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Analytics</title>
+    <style>
+        /* Analytics Specific Styles */
+        :root {
+            --primary-blue: #2C3E50;
+            --accent-gold: #F1C40F;
+            --hover-blue: #2980B9;
+            --secondary-indigo: #5D6D7E;
+            --charcoal: #34495E;
+            --white: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --medium-grey: #E5E9EC;
+            --dark-grey: #7F8C8D;
+            --shadow: rgba(44, 62, 80, 0.15);
+            --success: #27AE60;
+            --error: #E74C3C;
+            --warning: #F39C12;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-grey) 0%, var(--white) 100%);
+            color: var(--charcoal);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--primary-blue);
+            color: var(--white);
+            box-shadow: 0 4px 12px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--white);
+            margin: 0;
+            padding: 1.5rem 0;
+            text-align: center;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background: var(--secondary-indigo);
+            padding: 0.8rem 0;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a:hover {
+            background: var(--hover-blue);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gold);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after {
+            width: 80%;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        /* Analytics Grid */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--accent-gold);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--hover-blue));
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .card:nth-child(2) {
+            border-left-color: var(--success);
+        }
+
+        .card:nth-child(3) {
+            border-left-color: var(--hover-blue);
+        }
+
+        .card:nth-child(4) {
+            border-left-color: var(--warning);
+        }
+
+        .card:nth-child(5) {
+            border-left-color: var(--secondary-indigo);
+        }
+
+        .card:nth-child(6) {
+            border-left-color: var(--success);
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin: 0 0 1rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card p {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .card:nth-child(2) p {
+            color: var(--success);
+        }
+
+        .card:nth-child(3) p {
+            color: var(--hover-blue);
+        }
+
+        .card:nth-child(4) p {
+            color: var(--warning);
+        }
+
+        .card:nth-child(5) p {
+            color: var(--secondary-indigo);
+        }
+
+        .card:nth-child(6) p {
+            color: var(--success);
+        }
+
+        /* Stats Icons (Optional decorative elements) */
+        .card::after {
+            content: '📊';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            opacity: 0.1;
+        }
+
+        .card:nth-child(2)::after {
+            content: '👨‍🏫';
+        }
+
+        .card:nth-child(3)::after {
+            content: '👨‍🎓';
+        }
+
+        .card:nth-child(4)::after {
+            content: '📝';
+        }
+
+        .card:nth-child(5)::after {
+            content: '📤';
+        }
+
+        .card:nth-child(6)::after {
+            content: '⭐';
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 0 10px;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+                padding: 1rem 0;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .card p {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            nav a {
+                display: block;
+                width: 200px;
+                text-align: center;
+            }
+            
+            .card p {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .card:nth-child(2) { animation-delay: 0.1s; }
+        .card:nth-child(3) { animation-delay: 0.2s; }
+        .card:nth-child(4) { animation-delay: 0.3s; }
+        .card:nth-child(5) { animation-delay: 0.4s; }
+        .card:nth-child(6) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>System Analytics</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('manage_users') }}">Manage Users</a></li>
+                    <li><a href="{{ url_for('admin_analytics') }}">Analytics</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="analytics-grid">
+                <div class="card">
+                    <h2>Total Users</h2>
+                    <p>{{ stats.total_users }}</p>
+                </div>
+                <div class="card">
+                    <h2>Total Teachers</h2>
+                    <p>{{ stats.total_teachers }}</p>
+                </div>
+                <div class="card">
+                    <h2>Total Students</h2>
+                    <p>{{ stats.total_students }}</p>
+                </div>
+                <div class="card">
+                    <h2>Total Exams</h2>
+                    <p>{{ stats.total_exams }}</p>
+                </div>
+                <div class="card">
+                    <h2>Total Submissions</h2>
+                    <p>{{ stats.total_submissions }}</p>
+                </div>
+                <div class="card">
+                    <h2>Average Score</h2>
+                    <p>{{ '%.2f' | format(stats.average_score) }}%</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

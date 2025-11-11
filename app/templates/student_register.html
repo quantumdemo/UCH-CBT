@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <style>
+        /* Student Registration Specific Styles */
+        :root {
+            --primary-blue: #2C3E50;
+            --accent-gold: #F1C40F;
+            --hover-blue: #2980B9;
+            --secondary-indigo: #5D6D7E;
+            --charcoal: #34495E;
+            --white: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --medium-grey: #E5E9EC;
+            --dark-grey: #7F8C8D;
+            --shadow: rgba(44, 62, 80, 0.15);
+            --success: #27AE60;
+            --error: #E74C3C;
+            --warning: #F39C12;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-indigo) 100%);
+            color: var(--charcoal);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        /* Registration Container */
+        .login-container {
+            background: var(--white);
+            padding: 3rem 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--hover-blue));
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary-blue);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+        }
+
+        /* Form Styles */
+        form {
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--medium-grey);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--light-grey);
+            color: var(--charcoal);
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--hover-blue);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input[type="text"]::placeholder,
+        input[type="email"]::placeholder,
+        input[type="password"]::placeholder {
+            color: var(--dark-grey);
+        }
+
+        /* Select Dropdown Styling */
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%232C3E50' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1.2rem center;
+            background-size: 12px;
+            cursor: pointer;
+            padding-right: 3rem;
+        }
+
+        select option {
+            padding: 0.8rem;
+            font-size: 1rem;
+        }
+
+        /* Button Styles */
+        .btn {
+            width: 100%;
+            background: var(--success);
+            color: var(--white);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: #219653;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Login Link */
+        .login-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--medium-grey);
+        }
+
+        .login-link p {
+            color: var(--dark-grey);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-link a {
+            color: var(--hover-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .login-link a:hover {
+            color: var(--primary-blue);
+            transform: translateX(3px);
+        }
+
+        /* Form Focus States */
+        .form-group:focus-within label {
+            color: var(--hover-blue);
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            height: 4px;
+            background: var(--medium-grey);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .strength-weak { background: var(--error); width: 33%; }
+        .strength-medium { background: var(--warning); width: 66%; }
+        .strength-strong { background: var(--success); width: 100%; }
+
+        .strength-text {
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            font-weight: 500;
+        }
+
+        .strength-weak-text { color: var(--error); }
+        .strength-medium-text { color: var(--warning); }
+        .strength-strong-text { color: var(--success); }
+
+        /* Password Requirements */
+        .password-requirements {
+            background: var(--light-grey);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-gold);
+            font-size: 0.85rem;
+        }
+
+        .password-requirements h4 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .requirements-list {
+            list-style: none;
+            color: var(--dark-grey);
+        }
+
+        .requirements-list li {
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .requirement-met {
+            color: var(--success);
+        }
+
+        .requirement-unmet {
+            color: var(--dark-grey);
+        }
+
+        .requirement-icon::before {
+            content: '✓';
+            font-weight: bold;
+        }
+
+        .requirement-unmet .requirement-icon::before {
+            content: '○';
+            color: var(--dark-grey);
+        }
+
+        .requirement-met .requirement-icon::before {
+            color: var(--success);
+        }
+
+        /* Decorative Elements */
+        .login-container::after {
+            content: '📚';
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            opacity: 0.1;
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 2.5rem 2rem;
+                margin: 1rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            select {
+                padding: 0.9rem 1rem;
+            }
+            
+            .btn {
+                padding: 0.9rem 1.5rem;
+            }
+        }
+
+        /* Error State */
+        .error {
+            border-color: var(--error) !important;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: block;
+        }
+
+        /* Loading State */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            margin-bottom: 1.5rem;
+        }
+
+        .flash-message {
+            padding: 0.8rem 1.2rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .flash-success {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .flash-error {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Student Registration</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Password Requirements -->
+        <div class="password-requirements">
+            <h4>Password Requirements:</h4>
+            <ul class="requirements-list">
+                <li class="requirement-unmet" id="req-length">
+                    <span class="requirement-icon"></span>
+                    At least 8 characters
+                </li>
+                <li class="requirement-unmet" id="req-uppercase">
+                    <span class="requirement-icon"></span>
+                    One uppercase letter
+                </li>
+                <li class="requirement-unmet" id="req-lowercase">
+                    <span class="requirement-icon"></span>
+                    One lowercase letter
+                </li>
+                <li class="requirement-unmet" id="req-number">
+                    <span class="requirement-icon"></span>
+                    One number
+                </li>
+            </ul>
+        </div>
+
+        <form action="/student/register" method="post" id="registerForm">
+            <div class="form-group">
+                <label for="fullname">Full Name</label>
+                <input type="text" id="fullname" name="fullname" required placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your student email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Create a strong password">
+                <div class="password-strength">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="strength-text" id="strengthText">Password strength</div>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender">
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="class_">Class/Grade</label>
+                <input type="text" id="class_" name="class_" required placeholder="e.g., Grade 10, SS2, etc.">
+            </div>
+            <button type="submit" class="btn" id="submitBtn" disabled>Create Account</button>
+        </form>
+
+        <div class="login-link">
+            <p>Already have an account?</p>
+            <a href="/student/login">Login here</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            const submitBtn = document.getElementById('submitBtn');
+            const registerForm = document.getElementById('registerForm');
+
+            // Password strength requirements
+            const requirements = {
+                length: document.getElementById('req-length'),
+                uppercase: document.getElementById('req-uppercase'),
+                lowercase: document.getElementById('req-lowercase'),
+                number: document.getElementById('req-number')
+            };
+
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                let metRequirements = 0;
+
+                // Length requirement
+                if (password.length >= 8) {
+                    strength += 25;
+                    metRequirements++;
+                    requirements.length.classList.replace('requirement-unmet', 'requirement-met');
+                } else {
+                    requirements.length.classList.replace('requirement-met', 'requirement-unmet');
+                }
+
+                // Uppercase requirement
+                if (/[A-Z]/.test(password)) {
+                    strength += 25;
+                    metRequirements++;
+                    requirements.uppercase.classList.replace('requirement-unmet', 'requirement-met');
+                } else {
+                    requirements.uppercase.classList.replace('requirement-met', 'requirement-unmet');
+                }
+
+                // Lowercase requirement
+                if (/[a-z]/.test(password)) {
+                    strength += 25;
+                    metRequirements++;
+                    requirements.lowercase.classList.replace('requirement-unmet', 'requirement-met');
+                } else {
+                    requirements.lowercase.classList.replace('requirement-met', 'requirement-unmet');
+                }
+
+                // Number requirement
+                if (/[0-9]/.test(password)) {
+                    strength += 25;
+                    metRequirements++;
+                    requirements.number.classList.replace('requirement-unmet', 'requirement-met');
+                } else {
+                    requirements.number.classList.replace('requirement-met', 'requirement-unmet');
+                }
+
+                // Update strength bar and text
+                strengthBar.className = 'strength-bar';
+                if (password.length === 0) {
+                    strengthText.textContent = 'Password strength';
+                    strengthText.className = 'strength-text';
+                } else if (strength <= 50) {
+                    strengthBar.classList.add('strength-weak');
+                    strengthText.textContent = 'Weak password';
+                    strengthText.className = 'strength-text strength-weak-text';
+                } else if (strength <= 75) {
+                    strengthBar.classList.add('strength-medium');
+                    strengthText.textContent = 'Medium strength';
+                    strengthText.className = 'strength-text strength-medium-text';
+                } else {
+                    strengthBar.classList.add('strength-strong');
+                    strengthText.textContent = 'Strong password';
+                    strengthText.className = 'strength-text strength-strong-text';
+                }
+
+                return metRequirements === 4;
+            }
+
+            function validateForm() {
+                const fullname = document.getElementById('fullname').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const gender = document.getElementById('gender').value;
+                const studentClass = document.getElementById('class').value;
+
+                const isStrong = checkPasswordStrength(password);
+                const isFormComplete = fullname && email && password && gender && studentClass;
+
+                submitBtn.disabled = !(isStrong && isFormComplete);
+            }
+
+            // Event listeners
+            const formInputs = document.querySelectorAll('#registerForm input, #registerForm select');
+            formInputs.forEach(input => {
+                input.addEventListener('input', validateForm);
+                input.addEventListener('change', validateForm);
+            });
+
+            // Form submission
+            registerForm.addEventListener('submit', function(e) {
+                const btn = this.querySelector('.btn');
+                btn.classList.add('loading');
+                btn.innerHTML = 'Creating Account...';
+            });
+
+            // Add focus effects
+            formInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                    this.classList.remove('error');
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (this.value === '') {
+                        this.parentElement.classList.remove('focused');
+                    }
+                });
+            });
+
+            // Auto-focus on first field
+            document.getElementById('fullname').focus();
+
+            // Initial validation
+            validateForm();
+        });
+    </script>
+</body>
+</html>

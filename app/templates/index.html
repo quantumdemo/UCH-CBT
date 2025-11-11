@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCH Staff Secondary School - CBT Platform</title>
+    <style>
+        /* Enhanced Landing Page Styles */
+        :root {
+            --primary-blue: #2C3E50;
+            --accent-gold: #F1C40F;
+            --hover-blue: #2980B9;
+            --secondary-indigo: #5D6D7E;
+            --charcoal: #34495E;
+            --white: #FFFFFF;
+            --light-grey: #F8FAFC;
+            --medium-grey: #E8ECF1;
+            --dark-grey: #64748B;
+            --shadow: rgba(44, 62, 80, 0.08);
+            --success: #27AE60;
+            --error: #E74C3C;
+            --warning: #F39C12;
+            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --gradient-primary: linear-gradient(135deg, #2980B9 0%, #2C3E50 100%);
+            --gradient-gold: linear-gradient(135deg, #F1C40F 0%, #D4AC0D 100%);
+            --gradient-light: linear-gradient(135deg, #F8FAFC 0%, #FFFFFF 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--white);
+            color: var(--charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Enhanced Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 2px 30px rgba(44, 62, 80, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 5px 40px rgba(44, 62, 80, 0.12);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            text-decoration: none;
+            z-index: 1001;
+        }
+
+        .logo-image {
+            width: 55px;
+            height: 55px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(41, 128, 185, 0.3);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .logo .tagline {
+            font-size: 0.85rem;
+            color: var(--dark-grey);
+            font-weight: 500;
+        }
+
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+        }
+
+        .desktop-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .desktop-nav a {
+            color: var(--charcoal);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .desktop-nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gold);
+            transition: var(--transition);
+        }
+
+        .desktop-nav a:hover {
+            color: var(--hover-blue);
+        }
+
+        .desktop-nav a:hover::before {
+            width: 100%;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+            position: relative;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background: var(--primary-blue);
+            border-radius: 3px;
+            transition: var(--transition);
+            transform-origin: center;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateY(-100%);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 999;
+        }
+
+        .mobile-nav.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav li {
+            margin: 2rem 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .mobile-nav.active li {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mobile-nav li:nth-child(1) { transition-delay: 0.1s; }
+        .mobile-nav li:nth-child(2) { transition-delay: 0.2s; }
+        .mobile-nav li:nth-child(3) { transition-delay: 0.3s; }
+        .mobile-nav li:nth-child(4) { transition-delay: 0.4s; }
+        .mobile-nav li:nth-child(5) { transition-delay: 0.5s; }
+
+        .mobile-nav a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            display: block;
+            transition: var(--transition);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mobile-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .mobile-nav a:hover {
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .mobile-nav a:hover::before {
+            left: 0;
+        }
+
+        .mobile-nav a:active {
+            transform: translateY(-1px);
+        }
+
+        /* Enhanced Hero Section with Image */
+        #hero {
+            background: 
+                linear-gradient(135deg, rgba(41, 128, 185, 0.85) 0%, rgba(44, 62, 80, 0.9) 100%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" opacity="0.1"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23F1C40F"/><stop offset="100%" stop-color="%232980B9"/></linearGradient></defs><path fill="url(%23grad)" d="M0,0h1200v800H0V0z M200,200c33.1,0,60,26.9,60,60s-26.9,60-60,60s-60-26.9-60-60S166.9,200,200,200z M900,500 c33.1,0,60,26.9,60,60s-26.9,60-60,60s-60-26.9-60-60S866.9,500,900,500z M400,600c33.1,0,60,26.9,60,60s-26.9,60-60,60s-60-26.9-60-60 S366.9,600,400,600z M700,300c33.1,0,60,26.9,60,60s-26.9,60-60,60s-60-26.9-60-60S666.9,300,700,300z"/></svg>'),
+                var(--gradient-primary);
+            background-size: cover, 1200px 800px, cover;
+            background-position: center;
+            background-blend-mode: overlay, soft-light, normal;
+            color: var(--white);
+            padding: 180px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(241, 196, 15, 0.15);
+            color: var(--accent-gold);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        #hero h2 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        #hero p {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .login-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1.1rem 2.2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-width: 170px;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-gold);
+            color: var(--charcoal);
+            box-shadow: 0 8px 25px rgba(241, 196, 15, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(241, 196, 15, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: var(--white);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Enhanced Section Styles */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: var(--gradient-gold);
+            color: var(--charcoal);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--dark-grey);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Enhanced About Section */
+        #about {
+            background: var(--light-grey);
+            position: relative;
+        }
+
+        #about::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+        }
+
+        /* Enhanced Features Section */
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--medium-grey);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(41, 128, 185, 0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(44, 62, 80, 0.15);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--dark-grey);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Enhanced Stats Section */
+        #stats {
+            background: var(--gradient-primary);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        #stats .section-header h2 {
+            color: var(--white);
+        }
+
+        #stats .section-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-item {
+            padding: 2.5rem 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+        }
+
+        /* Enhanced How It Works */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            z-index: 1;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px var(--shadow);
+            border: 1px solid var(--medium-grey);
+            transition: var(--transition);
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(44, 62, 80, 0.12);
+        }
+
+        .step-number {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-gold);
+            color: var(--charcoal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 20px rgba(241, 196, 15, 0.4);
+            border: 3px solid var(--white);
+        }
+
+        .step h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .step p {
+            color: var(--dark-grey);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Enhanced Testimonials */
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2.5rem;
+            margin-top: 4rem;
+        }
+
+        .testimonial {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px var(--shadow);
+            border: 1px solid var(--medium-grey);
+            position: relative;
+        }
+
+        .testimonial::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 2.5rem;
+            font-size: 6rem;
+            color: var(--accent-gold);
+            font-family: Georgia, serif;
+            line-height: 1;
+            opacity: 0.3;
+        }
+
+        .testimonial-content {
+            font-style: italic;
+            color: var(--charcoal);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .author-info h4 {
+            color: var(--primary-blue);
+            margin-bottom: 0.3rem;
+            font-weight: 700;
+        }
+
+        .author-info p {
+            color: var(--dark-grey);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Enhanced CTA Section */
+        #cta {
+            background: var(--gradient-gold);
+            color: var(--charcoal);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334495E' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        #cta .section-header h2 {
+            color: var(--charcoal);
+        }
+
+        #cta .section-subtitle {
+            color: var(--charcoal);
+            opacity: 0.9;
+        }
+
+        /* Enhanced Footer - Fixed White Text */
+        footer {
+            background: var(--primary-blue);
+            color: var(--white) !important;
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+
+        footer * {
+            color: var(--white) !important;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+            text-align: left;
+        }
+
+        .footer-logo {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-logo .logo {
+            justify-content: flex-start;
+        }
+
+        .footer-logo .logo h1,
+        .footer-logo .logo .tagline {
+            color: var(--white) !important;
+        }
+
+        .footer-info p {
+            margin-bottom: 0.8rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 2rem;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1024px) {
+            .steps::before {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header .container {
+                padding: 1rem 20px;
+            }
+
+            .desktop-nav {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            #hero {
+                padding: 150px 0 80px;
+            }
+
+            #hero h2 {
+                font-size: 2.5rem;
+            }
+
+            #hero p {
+                font-size: 1.2rem;
+            }
+
+            .login-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            section {
+                padding: 80px 0;
+            }
+
+            section h2 {
+                font-size: 2.2rem;
+            }
+
+            .feature-cards {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .testimonials {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .footer-logo .logo {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.8rem;
+            }
+
+            .logo-text {
+                align-items: center;
+            }
+
+            #hero h2 {
+                font-size: 2rem;
+            }
+
+            #hero p {
+                font-size: 1.1rem;
+            }
+
+            .card {
+                padding: 2.5rem 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-number {
+                font-size: 3rem;
+            }
+
+            .testimonial {
+                padding: 2rem;
+            }
+
+            .mobile-nav a {
+                font-size: 1.3rem;
+                padding: 0.8rem 1.5rem;
+            }
+        }
+
+        /* Enhanced Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Stagger animations for children */
+        .fade-in-delay-1 { animation-delay: 0.1s; }
+        .fade-in-delay-2 { animation-delay: 0.2s; }
+        .fade-in-delay-3 { animation-delay: 0.3s; }
+        .fade-in-delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="#hero" class="logo">
+                <div class="logo-image">UCH</div>
+                <div class="logo-text">
+                    <h1>UCH Staff Secondary School</h1>
+                    <div class="tagline">Excellence in Education</div>
+                </div>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#cta">Get Started</a></li>
+                </ul>
+            </nav>
+
+            <!-- Hamburger Menu Button -->
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Mobile Navigation -->
+            <nav class="mobile-nav" id="mobileNav">
+                <ul>
+                    <li><a href="#about" onclick="closeMobileNav()">About</a></li>
+                    <li><a href="#features" onclick="closeMobileNav()">Features</a></li>
+                    <li><a href="#how-it-works" onclick="closeMobileNav()">How It Works</a></li>
+                    <li><a href="#testimonials" onclick="closeMobileNav()">Testimonials</a></li>
+                    <li><a href="#cta" onclick="closeMobileNav()">Get Started</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="container">
+                <div class="hero-content fade-in">
+                    <div class="hero-badge">🎓 Premium CBT Platform</div>
+                    <h2>Transforming Education Through Technology</h2>
+                    <p>Experience seamless computer-based testing with our intuitive platform designed for modern classrooms and digital learning environments.</p>
+                    <div class="login-buttons">
+                        <a href="/teacher/login" class="btn btn-primary">
+                            <span>👨‍🏫 Teacher Login</span>
+                        </a>
+                        <a href="/student/login" class="btn btn-secondary">
+                            <span>👨‍🎓 Student Login</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rest of the sections remain the same -->
+        <section id="about">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-badge">About Platform</div>
+                    <h2>Revolutionizing Exam Management</h2>
+                    <p class="section-subtitle">Our cutting-edge platform provides a comprehensive solution for conducting examinations, ensuring fairness, transparency, and efficiency for both educators and learners.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="stats">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-badge">Our Impact</div>
+                    <h2>Trusted by Educators & Students</h2>
+                    <p class="section-subtitle">Join hundreds of institutions already transforming their assessment processes with our reliable platform.</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item fade-in fade-in-delay-1">
+                        <div class="stat-number" data-count="500">0+</div>
+                        <div class="stat-label">Active Students</div>
+                    </div>
+                    <div class="stat-item fade-in fade-in-delay-2">
+                        <div class="stat-number" data-count="50">0+</div>
+                        <div class="stat-label">Expert Teachers</div>
+                    </div>
+                    <div class="stat-item fade-in fade-in-delay-3">
+                        <div class="stat-number" data-count="1000">0+</div>
+                        <div class="stat-label">Exams Conducted</div>
+                    </div>
+                    <div class="stat-item fade-in fade-in-delay-4">
+                        <div class="stat-number" data-count="99.9">99.9%</div>
+                        <div class="stat-label">Uptime Reliability</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-badge">Features</div>
+                    <h2>Powerful Platform Capabilities</h2>
+                    <p class="section-subtitle">Designed with modern educational needs in mind, our platform offers comprehensive features for effective assessment management.</p>
+                </div>
+                <div class="feature-cards">
+                    <div class="card fade-in fade-in-delay-1">
+                        <div class="card-icon">🌐</div>
+                        <h3>Online Mode</h3>
+                        <p>Flexible operation supporting both internet-based and local network examinations for maximum accessibility.</p>
+                    </div>
+                    <div class="card fade-in fade-in-delay-2">
+                        <div class="card-icon">📱</div>
+                        <h3>Mobile Optimized</h3>
+                        <p>Fully responsive design that works perfectly on all devices including smartphones, tablets, and desktops.</p>
+                    </div>
+                    <div class="card fade-in fade-in-delay-3">
+                        <div class="card-icon">🔒</div>
+                        <h3>Enterprise Security</h3>
+                        <p>Advanced security measures including encryption, secure authentication, and data protection protocols.</p>
+                    </div>
+                    <div class="card fade-in fade-in-delay-1">
+                        <div class="card-icon">📊</div>
+                        <h3>Real-time Analytics</h3>
+                        <p>Comprehensive dashboards and reporting tools for tracking student performance and progress analytics.</p>
+                    </div>
+                    <div class="card fade-in fade-in-delay-2">
+                        <div class="card-icon">⚡</div>
+                        <h3>Auto-grading System</h3>
+                        <p>Intelligent automatic grading that saves time and ensures objective, consistent evaluation standards.</p>
+                    </div>
+                    <div class="card fade-in fade-in-delay-3">
+                        <div class="card-icon">🎯</div>
+                        <h3>Multi-format Support</h3>
+                        <p>Support for various question types including multiple choice, short answer, essays, and image-based questions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-badge">Process</div>
+                    <h2>Simple & Efficient Workflow</h2>
+                    <p class="section-subtitle">Our streamlined process makes exam management effortless for both teachers and students.</p>
+                </div>
+                <div class="steps">
+                    <div class="step fade-in fade-in-delay-1">
+                        <div class="step-number">1</div>
+                        <h3>Account Setup</h3>
+                        <p>Quick registration and secure account creation for teachers and students with role-based access.</p>
+                    </div>
+                    <div class="step fade-in fade-in-delay-2">
+                        <div class="step-number">2</div>
+                        <h3>Exam Creation</h3>
+                        <p>Intuitive interface for creating exams with various question types, time limits, and security settings.</p>
+                    </div>
+                    <div class="step fade-in fade-in-delay-3">
+                        <div class="step-number">3</div>
+                        <h3>Secure Testing</h3>
+                        <p>Students take exams in a monitored, secure environment with anti-cheating measures and time tracking.</p>
+                    </div>
+                    <div class="step fade-in fade-in-delay-4">
+                        <div class="step-number">4</div>
+                        <h3>Instant Results</h3>
+                        <p>Immediate grading with detailed feedback, performance analytics, and comprehensive result reports.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-badge">Testimonials</div>
+                    <h2>What Our Community Says</h2>
+                    <p class="section-subtitle">Hear from educators and students who have transformed their assessment experience.</p>
+                </div>
+                <div class="testimonials">
+                    <div class="testimonial fade-in fade-in-delay-1">
+                        <div class="testimonial-content">
+                            "This platform has completely transformed how we conduct assessments. The intuitive interface and robust features have significantly reduced administrative workload while improving the student experience."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">JD</div>
+                            <div class="author-info">
+                                <h4>Dr. John Daniels</h4>
+                                <p>Head of Science Department</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial fade-in fade-in-delay-2">
+                        <div class="testimonial-content">
+                            "As a student, I appreciate how user-friendly the platform is. The clean interface makes focusing on exams easy, and instant results with detailed feedback help me understand where I need to improve."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">AS</div>
+                            <div class="author-info">
+                                <h4>Amanda Smith</h4>
+                                <p>Senior Student</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-badge">Get Started</div>
+                    <h2>Ready to Transform Your Assessments?</h2>
+                    <p class="section-subtitle">Join our growing community of educators and students embracing the future of examination management.</p>
+                </div>
+                <div class="login-buttons">
+                    <a href="/teacher/register" class="btn btn-primary">
+                        <span>👨‍🏫 Teacher Sign Up</span>
+                    </a>
+                    <a href="/student/register" class="btn btn-secondary">
+                        <span>👨‍🎓 Student Sign Up</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="#hero" class="logo">
+                        <div class="logo-image">UCH</div>
+                        <div class="logo-text">
+                            <h1>UCH Staff Secondary School</h1>
+                            <div class="tagline">Excellence in Education</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="footer-info">
+                    <p>📧 info@uchstaffschool.com</p>
+                    <p>📞 +234 123 456 7890</p>
+                    <p>📍 University College Hospital, Ibadan, Nigeria</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 UCH Staff Secondary School. All Rights Reserved.</p>
+                <p>Transforming Education Through Innovation</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger Menu Functionality
+        const hamburger = document.getElementById('hamburger');
+        const mobileNav = document.getElementById('mobileNav');
+        const body = document.body;
+
+        function toggleMobileNav() {
+            hamburger.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+            body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeMobileNav() {
+            hamburger.classList.remove('active');
+            mobileNav.classList.remove('active');
+            body.style.overflow = '';
+        }
+
+        hamburger.addEventListener('click', toggleMobileNav);
+
+        // Close mobile nav when clicking on a link
+        document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', closeMobileNav);
+        });
+
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', (e) => {
+            if (mobileNav.classList.contains('active') && 
+                !hamburger.contains(e.target) && 
+                !mobileNav.contains(e.target)) {
+                closeMobileNav();
+            }
+        });
+
+        // Enhanced smooth scrolling
+        document.querySelectorAll('nav a, .logo').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const targetPosition = targetElement.offsetTop - headerHeight - 20;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Enhanced header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            const scrollY = window.scrollY;
+            
+            if (scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Enhanced intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.fade-in').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(element);
+        });
+
+        // Animated counter for stats
+        function animateCounter(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    element.textContent = target + '+';
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(start) + '+';
+                }
+            }, 16);
+        }
+
+        // Initialize counters when stats section is visible
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.stat-number').forEach(stat => {
+                        const target = parseInt(stat.getAttribute('data-count'));
+                        if (!stat.classList.contains('animated')) {
+                            animateCounter(stat, target);
+                            stat.classList.add('animated');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsSection = document.querySelector('#stats');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Close mobile nav on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                closeMobileNav();
+            }
+        });
+    </script>
+</body>
+</html>

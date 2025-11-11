@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <style>
+        /* Manage Users Specific Styles */
+        :root {
+            --primary-blue: #2C3E50;
+            --accent-gold: #F1C40F;
+            --hover-blue: #2980B9;
+            --secondary-indigo: #5D6D7E;
+            --charcoal: #34495E;
+            --white: #FFFFFF;
+            --light-grey: #F4F6F8;
+            --medium-grey: #E5E9EC;
+            --dark-grey: #7F8C8D;
+            --shadow: rgba(44, 62, 80, 0.15);
+            --success: #27AE60;
+            --error: #E74C3C;
+            --warning: #F39C12;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-grey) 0%, var(--white) 100%);
+            color: var(--charcoal);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--primary-blue);
+            color: var(--white);
+            box-shadow: 0 4px 12px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--white);
+            margin: 0;
+            padding: 1.5rem 0;
+            text-align: center;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background: var(--secondary-indigo);
+            padding: 0.8rem 0;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a:hover {
+            background: var(--hover-blue);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gold);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after {
+            width: 80%;
+        }
+
+        /* Header Styles */
+        /*header {
+            background: var(--primary-blue);
+            color: var(--white);
+            box-shadow: 0 4px 12px var(--shadow);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--white);
+            margin: 0;
+            text-align: center;
+        }*/
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        /* Section Headings */
+        h2 {
+            color: var(--charcoal);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--accent-gold);
+            display: inline-block;
+        }
+
+        /* Bulk Actions */
+        .bulk-actions {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .bulk-actions form {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .bulk-actions label {
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-right: 0.5rem;
+        }
+
+        input[type="file"] {
+            padding: 0.6rem;
+            border: 2px solid var(--medium-grey);
+            border-radius: 6px;
+            background: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        input[type="file"]:focus {
+            outline: none;
+            border-color: var(--hover-blue);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+        }
+
+        input[type="file"]::file-selector-button {
+            background: var(--secondary-indigo);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: var(--hover-blue);
+        }
+
+        /* Button Styles */
+        .btn {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: var(--hover-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(41, 128, 185, 0.3);
+        }
+
+        .btn-export {
+            background: var(--success);
+        }
+
+        .btn-export:hover {
+            background: #219653;
+        }
+
+        /* Divider */
+        hr {
+            border: none;
+            height: 2px;
+            background: var(--medium-grey);
+            margin: 2rem 0;
+            border-radius: 1px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        thead {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        th {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: var(--transition);
+            border-bottom: 1px solid var(--medium-grey);
+        }
+
+        tbody tr:hover {
+            background: var(--light-grey);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 1.2rem 1rem;
+            color: var(--charcoal);
+            font-weight: 500;
+        }
+
+        /* Role Badges */
+        .role-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-student {
+            background: rgba(41, 128, 185, 0.1);
+            color: var(--hover-blue);
+            border: 1px solid var(--hover-blue);
+        }
+
+        .role-teacher {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .role-admin {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .actions a {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            display: inline-block;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .actions a:nth-child(1) {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .actions a:nth-child(1):hover {
+            background: #E67E22;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+        }
+
+        .actions a:nth-child(2) {
+            background: var(--error);
+            color: var(--white);
+        }
+
+        .actions a:nth-child(2):hover {
+            background: #C0392B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+        }
+
+        .actions a:nth-child(3) {
+            background: var(--secondary-indigo);
+            color: var(--white);
+        }
+
+        .actions a:nth-child(3):hover {
+            background: var(--hover-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(93, 109, 126, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow);
+            color: var(--dark-grey);
+        }
+
+        .empty-state p {
+            font-size: 1.2rem;
+            margin-bottom: 0;
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow);
+            text-align: center;
+            border-top: 4px solid var(--accent-gold);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--dark-grey);
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 0 10px;
+            }
+            
+            .bulk-actions form {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            th, td {
+                padding: 1rem 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            th, td {
+                padding: 0.8rem 0.5rem;
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 0.9rem 1.5rem;
+            }
+            
+            .bulk-actions {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bulk-actions, table, .stats-overview {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Confirmation Dialog Enhancement */
+        .actions a:nth-child(2):hover::before {
+            content: '🗑️ ';
+        }
+
+        .actions a:nth-child(3):hover::before {
+            content: '🔑 ';
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Manage Users</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('manage_users') }}">Manage Users</a></li>
+                    <li><a href="{{ url_for('admin_analytics') }}">Analytics</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <!-- User Statistics -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-number">{{ users|length }}</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ users|selectattr('role', 'equalto', 'student')|list|length }}</div>
+                    <div class="stat-label">Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ users|selectattr('role', 'equalto', 'teacher')|list|length }}</div>
+                    <div class="stat-label">Teachers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ users|selectattr('role', 'equalto', 'admin')|list|length }}</div>
+                    <div class="stat-label">Admins</div>
+                </div>
+            </div>
+
+            <h2>Bulk User Management</h2>
+            <div class="bulk-actions">
+                <form action="{{ url_for('bulk_import_users') }}" method="post" enctype="multipart/form-data">
+                    <label for="file">Import Users (XLSX):</label>
+                    <input type="file" name="file" accept=".xlsx" required>
+                    <button type="submit" class="btn">Upload</button>
+                </form>
+                <a href="{{ url_for('export_users') }}" class="btn btn-export" style="margin-left: 20px;">Export All Users</a>
+            </div>
+            
+            <hr>
+            
+            <h2>All Users</h2>
+            {% if users %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.fullname }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <span class="role-badge role-{{ user.role }}">
+                                    {{ user.role }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a href="{{ url_for('edit_user', user_id=user.id) }}">Edit</a>
+                                    <a href="{{ url_for('delete_user', user_id=user.id) }}" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                                    <a href="{{ url_for('admin_reset_password', user_id=user.id) }}" onclick="return confirm('Are you sure you want to send a password reset email to this user?');">Reset Password</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <p>No users found in the system.</p>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        // Add enhanced confirmation for actions
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteLinks = document.querySelectorAll('.actions a:nth-child(2)');
+            const resetLinks = document.querySelectorAll('.actions a:nth-child(3)');
+            
+            deleteLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!confirm('Are you sure you want to delete this user? This action cannot be undone and will remove all associated data.')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+            
+            resetLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!confirm('This will send a password reset email to the user. Continue?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+
+            // Add file input validation
+            const fileInput = document.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const fileName = file.name.toLowerCase();
+                        if (!fileName.endsWith('.xlsx')) {
+                            alert('Please select a valid Excel file (.xlsx)');
+                            this.value = '';
+                        }
+                    }
+                });
+            }
+
+            // Add loading states
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    const btn = this.querySelector('.btn');
+                    if (btn) {
+                        btn.classList.add('loading');
+                        btn.innerHTML = 'Processing...';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

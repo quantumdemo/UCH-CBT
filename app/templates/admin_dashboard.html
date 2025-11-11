@@ -1,0 +1,339 @@
+{% extends "_layout.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block header %}
+    Admin Dashboard
+{% endblock %}
+
+{% block nav %}
+<style>
+    /* Navigation Styles */
+    nav {
+        background: var(--secondary-indigo);
+        padding: 0.8rem 0;
+    }
+
+    nav ul {
+        display: flex;
+        list-style: none;
+        justify-content: center;
+        gap: 2rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav a {
+        color: var(--white);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    nav a:hover {
+        background: var(--hover-blue);
+        color: var(--white);
+        transform: translateY(-2px);
+    }
+
+    nav a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--accent-gold);
+        transition: var(--transition);
+        transform: translateX(-50%);
+    }
+
+    nav a:hover::after {
+        width: 80%;
+    }
+
+    /* Responsive Navigation */
+    @media (max-width: 768px) {
+        nav ul {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        nav ul {
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        nav a {
+            display: block;
+            width: 200px;
+            text-align: center;
+        }
+    }
+</style>
+
+<nav>
+    <ul>
+        <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('manage_users') }}">Manage Users</a></li>
+        <li><a href="{{ url_for('admin_analytics') }}">Analytics</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Admin Dashboard Specific Styles */
+    :root {
+        --primary-blue: #2C3E50;
+        --accent-gold: #F1C40F;
+        --hover-blue: #2980B9;
+        --secondary-indigo: #5D6D7E;
+        --charcoal: #34495E;
+        --white: #FFFFFF;
+        --light-grey: #F4F6F8;
+        --medium-grey: #E5E9EC;
+        --dark-grey: #7F8C8D;
+        --shadow: rgba(44, 62, 80, 0.15);
+        --success: #27AE60;
+        --error: #E74C3C;
+        --warning: #F39C12;
+        --transition: all 0.3s ease;
+    }
+
+    h2 {
+        color: var(--charcoal);
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid var(--accent-gold);
+        display: inline-block;
+    }
+
+    /* Table Styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--white);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px var(--shadow);
+        margin-bottom: 2rem;
+    }
+
+    thead {
+        background: var(--primary-blue);
+        color: var(--white);
+    }
+
+    th {
+        padding: 1.2rem 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    tbody tr {
+        transition: var(--transition);
+        border-bottom: 1px solid var(--medium-grey);
+    }
+
+    tbody tr:hover {
+        background: var(--light-grey);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    td {
+        padding: 1.2rem 1rem;
+        color: var(--charcoal);
+        font-weight: 500;
+    }
+
+    /* Action Buttons */
+    .actions {
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-block;
+        text-align: center;
+        min-width: 80px;
+    }
+
+    .btn-approve {
+        background: var(--success);
+        color: var(--white);
+    }
+
+    .btn-approve:hover {
+        background: #219653;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+    }
+
+    .btn-decline {
+        background: var(--error);
+        color: var(--white);
+    }
+
+    .btn-decline:hover {
+        background: #C0392B;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: var(--white);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px var(--shadow);
+        color: var(--dark-grey);
+    }
+
+    .empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--charcoal);
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-pending {
+        background: rgba(243, 156, 18, 0.1);
+        color: var(--warning);
+        border: 1px solid var(--warning);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        table {
+            display: block;
+            overflow-x: auto;
+        }
+        
+        th, td {
+            padding: 1rem 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        .actions {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .btn {
+            min-width: 70px;
+            padding: 0.5rem 1rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        th, td {
+            padding: 0.8rem 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    table {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+</style>
+
+<h2>Pending Teacher Approvals</h2>
+
+{% if pending_teachers %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for teacher in pending_teachers %}
+        <tr>
+            <td>{{ teacher.fullname }}</td>
+            <td>{{ teacher.email }}</td>
+            <td><span class="status-badge status-pending">Pending</span></td>
+            <td>
+                <div class="actions">
+                    <a href="{{ url_for('approve_teacher', teacher_id=teacher.id) }}" class="btn btn-approve">Approve</a>
+                    <a href="{{ url_for('decline_teacher', teacher_id=teacher.id) }}" class="btn btn-decline" onclick="return confirm('Are you sure you want to decline this teacher?')">Decline</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+    <h3>No Pending Approvals</h3>
+    <p>All teacher accounts have been processed.</p>
+</div>
+{% endif %}
+{% endblock %}
